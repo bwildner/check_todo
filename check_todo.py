@@ -6,7 +6,7 @@ import win32com.client
 print "Prg Start"
 xl = win32com.client.DispatchEx('Excel.Application')
 
-ss = xl.Workbooks.Open('e:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True)    
+ss = xl.Workbooks.Open('d:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True)    
 
 erl= ss.Worksheets("Erledigt")
 
@@ -14,7 +14,17 @@ ss.Worksheets("Erledigt").Activate()
 sh = ss.ActiveSheet
 
 print "Suchen Start"
-    
+
+print ss.Worksheets(1).Name   
+print ss.Worksheets(2).Name    
+print ss.Worksheets(3).Name    
+print ss.Worksheets(4).Name    
+print ss.Worksheets(5).Name    
+
+ 
+print ss.Worksheets.Count
+
+time.sleep(10)
 
 for i in range(1,1500):
     
