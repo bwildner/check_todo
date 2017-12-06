@@ -6,7 +6,7 @@ import win32com.client
 print "Prg Start"
 xl = win32com.client.DispatchEx('Excel.Application')
 
-ss = xl.Workbooks.Open('d:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True)    
+ss = xl.Workbooks.Open('e:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True)    
 
 erl= ss.Worksheets("Erledigt")
 
