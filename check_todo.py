@@ -33,7 +33,7 @@ def suchen(mnummer):
     logging.info("Suche Start")
  
     anzsheets = xlfile.Worksheets.Count -1 # letztes Sheet Hilfe nicht durchsuchen
-    
+    #anzsheets =2
     for f in range(1,anzsheets):
         suchsheet = xlfile.Worksheets(f)
         print "++++++++++++++++Suche in Sheet: "+xlfile.Worksheets(f).Name
@@ -41,19 +41,19 @@ def suchen(mnummer):
         print xlfile.Worksheets(f).UsedRange.Rows.Count
  
         
-        for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count):
-        
+        for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count): #von 1 bis Ende Zeilen durchsuchen
+            print str(f)+"    "+ str(i)
             #print sh.Cells(i,8)
-            print suchsheet.Cells(i,8)
+            #print suchsheet.Cells(i,8)
             zelle= str(suchsheet.Cells(i,8))
             suche= str(mnummer)
-            print zelle.find(suche)
+            #print zelle.find(suche)
             if zelle.find(suche)>=0:
             
                 print "Suchtext gefunden "+zelle
-                break
-            else:
-                print suche+" ist Nicht gleich " + zelle
+                #break
+            #else:
+                #print suche+" ist Nicht gleich " + zelle
               
 
     print "Suchen Ende"        
@@ -103,7 +103,7 @@ myWindow.show()
 app.exec_()
 
 
-xlfile.Close(False) 
+#xlfile.Close(False) 
 xl.Application.Quit()    
 
 
