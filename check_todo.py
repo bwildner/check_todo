@@ -3,15 +3,7 @@ import sys
 import win32com.client
 import logging
 from PyQt4 import uic 
-from PyQt4.QtGui import QWidget, QMainWindow, QVBoxLayout, QTextEdit, QMessageBox, QApplication
-
-
-
-
-logging.basicConfig(filename="check_todo.log",level = logging.DEBUG,format = "%(asctime)s [%(levelname)-8s] %(message)s")
-
- 
-logging.info("****************Start Logging****************")
+from PyQt4.QtGui import QMainWindow, QMessageBox, QApplication
 
 form_class = uic.loadUiType("check_todo_gui.ui")[0]                 # Load the UI
 
@@ -32,19 +24,77 @@ class MyWindowClass(QMainWindow, form_class):
             QMessageBox.warning(self, "Eingabefehler","Bitte die MNummer 5stellig eingeben.",QMessageBox.Cancel, QMessageBox.NoButton,QMessageBox.NoButton)
             return
         logging.info("Eingabe: "+ str(eingabe))
-               
         
-           
- 
- 
-app = QApplication(sys.argv)
-myWindow = MyWindowClass(None)
+        suchen(eingabe)
+               
 
-#zwischenablage auslesen, pruefen und in das Textfeld kopieren
-zwischenablage = str(QApplication.clipboard().text())
-if len(zwischenablage) >5:
-    QApplication.clipboard().setText("")
-myWindow.mnummer_textfeld.setText(QApplication.clipboard().text())
+def suchen(mnummer):
+    print "Suchen Start"
+    logging.info("Suche Start")
+ 
+    anzsheets = xlfile.Worksheets.Count -1 # letztes Sheet Hilfe nicht durchsuchen
+    
+    for f in range(1,anzsheets):
+        suchsheet = xlfile.Worksheets(f)
+        print "++++++++++++++++Suche in Sheet: "+xlfile.Worksheets(f).Name
+        logging.info("Suche Start in sheet: "+str(xlfile.Worksheets(f).Name))
+        print xlfile.Worksheets(f).UsedRange.Rows.Count
+ 
+        
+        for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count):
+        
+            #print sh.Cells(i,8)
+            print suchsheet.Cells(i,8)
+            zelle= str(suchsheet.Cells(i,8))
+            suche= str(mnummer)
+            print zelle.find(suche)
+            if zelle.find(suche)>=0:
+            
+                print "Suchtext gefunden "+zelle
+                break
+            else:
+                print suche+" ist Nicht gleich " + zelle
+              
+
+    print "Suchen Ende"        
+    xl.Visible = True  
+
+    zelle="H"+str(i)    
+    xl.Range(zelle).Select()    
+    time.sleep(10)    
+
+
+def initxl():
+    global xl, xlfile, erl, sh, app, myWindow
+    xl = win32com.client.DispatchEx('Excel.Application')
+    xlfile = xl.Workbooks.Open('e:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True) 
+    erl= xlfile.Worksheets("Erledigt")
+    xlfile.Worksheets("Erledigt").Activate()
+    sh = xlfile.ActiveSheet
+    app = QApplication(sys.argv)
+    myWindow = MyWindowClass(None)
+
+def zwischenablage():
+    #zwischenablage auslesen, pruefen und in das Textfeld kopieren
+    zwischenablage = str(QApplication.clipboard().text())
+    if len(zwischenablage) >5:
+        QApplication.clipboard().setText("")
+    myWindow.mnummer_textfeld.setText(QApplication.clipboard().text())
+
+    
+
+
+
+##### Hauptprogramm #####
+
+print "Prg Start"
+logging.basicConfig(filename="check_todo.log",level = logging.DEBUG,format = "%(asctime)s [%(levelname)-8s] %(message)s")
+logging.info("****************Start Logging****************")
+
+
+
+initxl() #Init 
+zwischenablage() #Zwischenablage pruefen
 
 
 myWindow.show()
@@ -53,59 +103,16 @@ myWindow.show()
 app.exec_()
 
 
-
-
-
-
-
- 
-#----------------------------------------------------------------------
-#xl = win32.gencache.EnsureDispatch('Excel.Application')
-print "Prg Start"
-xl = win32com.client.DispatchEx('Excel.Application')
-
-ss = xl.Workbooks.Open('e:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True)    
-
-erl= ss.Worksheets("Erledigt")
-
-ss.Worksheets("Erledigt").Activate()    
-sh = ss.ActiveSheet
-
-print "Suchen Start"
-
-print ss.Worksheets(1).Name   
-print ss.Worksheets(2).Name    
-print ss.Worksheets(3).Name    
-print ss.Worksheets(4).Name    
-print ss.Worksheets(5).Name    
-
- 
-print ss.Worksheets.Count
-
-time.sleep(10)
-
-for i in range(1,1500):
-    
-    #print sh.Cells(i,8)
-    print erl.Cells(i,8)
-    zelle= str(erl.Cells(i,8))
-    suche= str(56040)
-    print zelle.find(suche)
-    if zelle.find(suche)>=0:
-        
-        print "Suchtext gefunden "+zelle
-        break
-    else:
-        print suche+" ist Nicht gleich " + zelle
-              
-
-print "Suchen Ende"        
-xl.Visible = True  
-
-zelle="H"+str(i)    
-xl.Range(zelle).Select()    
-time.sleep(10)    
-ss.Close(False) 
+xlfile.Close(False) 
 xl.Application.Quit()    
+
+
 print "Programm Ende"    
+
+
+
+
+
+
+ 
  
