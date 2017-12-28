@@ -1,3 +1,7 @@
+#check_todo.py 
+# Dezember 2017 Bernd Wildner
+# Oeffnet die ToDo Liste und sucht nach der angegebenen MNummer
+
 import time
 import sys
 import win32com.client
