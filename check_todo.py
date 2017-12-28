@@ -11,6 +11,7 @@ from PyQt4.QtGui import QMainWindow, QMessageBox, QApplication
 
 form_class = uic.loadUiType("check_todo_gui.ui")[0]                 # Load the UI
 
+        
 
 class MyWindowClass(QMainWindow, form_class):
     def __init__(self, parent=None):
@@ -46,12 +47,15 @@ def suchen(mnummer):
  
         
         for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count): #von 1 bis Ende Zeilen durchsuchen
-            print str(f)+"    "+ str(i)
-            #print sh.Cells(i,8)
-            #print suchsheet.Cells(i,8)
-            zelle= str(suchsheet.Cells(i,8))
+            zelleunicode = unicode(suchsheet.Cells(i,6))
+            zelleunicodeentf= zelleunicode.encode('utf8', 'replace')
+            #print suchsheet.Cells(i,6)
+            #zelle= str(suchsheet.Cells(i,6))
+            zelle=str(zelleunicodeentf)
             suche= str(mnummer)
             #print zelle.find(suche)
+            print " Sheetnr:"+str(f)+" Zeile:"+ str(i)+" Zelle:"+zelle
+            
             if zelle.find(suche)>=0:
             
                 print "Suchtext gefunden "+zelle
