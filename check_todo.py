@@ -9,6 +9,7 @@ import logging
 from PyQt4 import uic 
 from PyQt4.QtGui import QMainWindow, QMessageBox, QApplication
 
+
 form_class = uic.loadUiType("check_todo_gui.ui")[0]                 # Load the UI
 
         
@@ -32,33 +33,56 @@ class MyWindowClass(QMainWindow, form_class):
         
         suchen(eingabe)
                
+def suchespalte(register): 
+    #sucht die Spalte mit der Ueberschrift M-Nr in dem Sheet/Register
+    
+    logging.info("suche MNummern Spalte")
+    suchsheet = xlfile.Worksheets(register)
+        
+    for zeile in range(1,5): #suchen nur in den ersten 5 Zeilen und 10 Spalten
+        for spalte in range (1,10):
+            zelleunicode = unicode(suchsheet.Cells(zeile,spalte)) #fals unicode zeichen enthalten sind, gibt es so keinen Fehler
+            zelleunicodeentf= zelleunicode.encode('utf8', 'replace')
+            #print suchsheet.Cells(i,6)
+            #zelle= str(suchsheet.Cells(i,6))
+            zelle=str(zelleunicodeentf)
+            suche= str("M-Nr") 
+            
+            if zelle.find(suche)>=0:
+                logging.info ("suchspalte gefunden Zeile:"+str(zeile)+" Spalte:"+str(spalte))
+                return spalte
+    logging.info("suchespalte: nichts gefunden")
+            
 
 def suchen(mnummer):
+    
     print "Suchen Start"
     logging.info("Suche Start")
  
-    anzsheets = xlfile.Worksheets.Count -1 # letztes Sheet Hilfe nicht durchsuchen
-    #anzsheets =2
+    anzsheets = xlfile.Worksheets.Count # letztes Sheet Hilfe nicht durchsuchen
+    #anzsheets=2
     for f in range(1,anzsheets):
+        suchspalte= suchespalte(f) #in welcher Zeile stehen die MNummern
         suchsheet = xlfile.Worksheets(f)
         print "++++++++++++++++Suche in Sheet: "+xlfile.Worksheets(f).Name
         logging.info("Suche Start in sheet: "+str(xlfile.Worksheets(f).Name))
-        print xlfile.Worksheets(f).UsedRange.Rows.Count
+        logging.debug ("Anzahl Zeilen: "+xlfile.Worksheets(f).UsedRange.Rows.Count)
  
         
         for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count): #von 1 bis Ende Zeilen durchsuchen
-            zelleunicode = unicode(suchsheet.Cells(i,6))
+            zelleunicode = unicode(suchsheet.Cells(i,suchspalte))
             zelleunicodeentf= zelleunicode.encode('utf8', 'replace')
             #print suchsheet.Cells(i,6)
             #zelle= str(suchsheet.Cells(i,6))
             zelle=str(zelleunicodeentf)
             suche= str(mnummer)
             #print zelle.find(suche)
-            print " Sheetnr:"+str(f)+" Zeile:"+ str(i)+" Zelle:"+zelle
+            logging.debug(" Sheetnr:"+str(f)+" Zeile:"+ str(i)+" Zelle:"+str(zelle))
             
             if zelle.find(suche)>=0:
             
                 print "Suchtext gefunden "+zelle
+                logging.info("Suchtext gefunden"+str(zelle))
                 #break
             #else:
                 #print suche+" ist Nicht gleich " + zelle
@@ -96,13 +120,14 @@ def zwischenablage():
 ##### Hauptprogramm #####
 
 print "Prg Start"
-logging.basicConfig(filename="check_todo.log",level = logging.DEBUG,format = "%(asctime)s [%(levelname)-8s] %(message)s")
+logging.basicConfig(filename="check_todo.log",level = logging.INFO,format = "%(asctime)s [%(levelname)-8s] %(message)s")
 logging.info("****************Start Logging****************")
 
 
 
 initxl() #Init 
 zwischenablage() #Zwischenablage pruefen
+
 
 
 myWindow.show()
