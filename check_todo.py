@@ -66,7 +66,7 @@ def suchen(mnummer):
         suchsheet = xlfile.Worksheets(f)
         print "++++++++++++++++Suche in Sheet: "+xlfile.Worksheets(f).Name
         logging.info("Suche Start in sheet: "+str(xlfile.Worksheets(f).Name))
-        logging.debug ("Anzahl Zeilen: "+xlfile.Worksheets(f).UsedRange.Rows.Count)
+        logging.debug ("Anzahl Zeilen: "+ str(xlfile.Worksheets(f).UsedRange.Rows.Count))
  
         
         for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count): #von 1 bis Ende Zeilen durchsuchen
