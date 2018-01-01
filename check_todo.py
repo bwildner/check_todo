@@ -93,13 +93,7 @@ def suchen(mnummer):
               
 
     print "Suchen Ende"        
-    #xl.Visible = True  
-
-    #zelle="H"+str(i)    
-    #xl.Range(zelle).Select()    
-    #time.sleep(10)
-    #return ergebnis    
-
+    
 
 def initxl():
     global xl, xlfile, erl, sh, app, myWindow
@@ -139,6 +133,18 @@ myWindow.show()
 
 
 app.exec_() #start GUI Schleife
+
+xl.Visible = True 
+xl.WindowState = 2
+xlfile.Worksheets(ergebnis[0]).Activate() #gesuchtes Sheet aktivieren
+
+#xl.Range("1").Select()    
+xl.Rows(str(ergebnis[1])).Select() #gesuchte Zeile markieren
+xl.WindowState = 2 #maximiert das Fenster
+#zelle="H"+str(i)    
+#xl.Range(zelle).Select()    
+time.sleep(10)
+#return ergebnis    
 
 
 #xlfile.Close(False) 
