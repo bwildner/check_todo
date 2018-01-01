@@ -134,21 +134,40 @@ myWindow.show()
 
 app.exec_() #start GUI Schleife
 
-xl.Visible = True 
-xl.WindowState = 2
-xlfile.Worksheets(ergebnis[0]).Activate() #gesuchtes Sheet aktivieren
+if len(ergebnis) == 2:
+    xl.Visible = True 
+    xl.WindowState = 2
+    xlfile.Worksheets(ergebnis[0]).Activate() #gesuchtes Sheet aktivieren
 
-#xl.Range("1").Select()    
-xl.Rows(str(ergebnis[1])).Select() #gesuchte Zeile markieren
-xl.WindowState = 2 #maximiert das Fenster
-#zelle="H"+str(i)    
-#xl.Range(zelle).Select()    
+    #xl.Range("1").Select()    
+    xl.Rows(str(ergebnis[1])).Select() #gesuchte Zeile markieren
+    xl.WindowState = 3 #maximiert das Fenster
+    #zelle="H"+str(i)    
+    #xl.Range(zelle).Select()    
+
+
+if len(ergebnis) >2:
+    
+
+    wb = xl.Workbooks.Add()
+    ws = wb.Worksheets.Add()
+    ws.Name = "Ergebnisse"
+    #wb.Worksheet(1).Rows(1).Value = xlfile.Worksheet(1).Rows(1)
+    for i in range(1,len(ergebnis),2):
+        xlfile.Worksheets(i).Rows(i+1).Copy()
+        ws.Paste(ws.Rows(i))
+        print wb.Worksheets(1).Rows(i)
+
+    #xl2.WindowState = 1
+    xl.Visible = True
+    
+
 time.sleep(10)
 #return ergebnis    
 
 
 #xlfile.Close(False) 
-xl.Application.Quit()    
+#xl.Application.Quit()    
 
 print ergebnis
 
