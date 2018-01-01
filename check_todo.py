@@ -32,6 +32,7 @@ class MyWindowClass(QMainWindow, form_class):
         logging.info("Eingabe: "+ str(eingabe))
         
         suchen(eingabe)
+        app.quit() #GUI Schleife beenden
                
 def suchespalte(register): 
     #sucht die Spalte mit der Ueberschrift M-Nr in dem Sheet/Register
@@ -55,7 +56,8 @@ def suchespalte(register):
             
 
 def suchen(mnummer):
-    
+    global ergebnis
+    ergebnis = []
     print "Suchen Start"
     logging.info("Suche Start")
  
@@ -83,17 +85,20 @@ def suchen(mnummer):
             
                 print "Suchtext gefunden "+zelle
                 logging.info("Suchtext gefunden"+str(zelle))
+                ergebnis.extend((f,i))
+                
                 #break
             #else:
                 #print suche+" ist Nicht gleich " + zelle
               
 
     print "Suchen Ende"        
-    xl.Visible = True  
+    #xl.Visible = True  
 
-    zelle="H"+str(i)    
-    xl.Range(zelle).Select()    
-    time.sleep(10)    
+    #zelle="H"+str(i)    
+    #xl.Range(zelle).Select()    
+    #time.sleep(10)
+    #return ergebnis    
 
 
 def initxl():
@@ -133,12 +138,13 @@ zwischenablage() #Zwischenablage pruefen
 myWindow.show()
 
 
-app.exec_()
+app.exec_() #start GUI Schleife
 
 
 #xlfile.Close(False) 
 xl.Application.Quit()    
 
+print ergebnis
 
 print "Programm Ende"    
 
