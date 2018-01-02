@@ -2,7 +2,7 @@
 # Dezember 2017 Bernd Wildner
 # Oeffnet die ToDo Liste und sucht nach der angegebenen MNummer
 
-import time
+#import time
 import sys
 import win32com.client
 import logging
@@ -32,7 +32,12 @@ class MyWindowClass(QMainWindow, form_class):
         logging.info("Eingabe: "+ str(eingabe))
         
         suchen(eingabe)
-        app.quit() #GUI Schleife beenden
+        if len(ergebnis)==0:
+            QMessageBox.warning(self, "Ergebnis","Nichts gefunden", QMessageBox.Cancel, QMessageBox.NoButton, QMessageBox.NoButton)
+        else:
+            app.quit() #GUI Schleife beenden
+       
+        
                
 def suchespalte(register): 
     #sucht die Spalte mit der Ueberschrift M-Nr in dem Sheet/Register
@@ -92,7 +97,7 @@ def suchen(mnummer):
                 #print suche+" ist Nicht gleich " + zelle
               
 
-    print "Suchen Ende"        
+    logging.info("Suchen Ende, Ergebnis: "+str(ergebnis))        
     
 
 def initxl():
@@ -134,7 +139,7 @@ myWindow.show()
 
 app.exec_() #start GUI Schleife
 
-if len(ergebnis) == 2:
+if len(ergebnis) == 2: #nur ein Ergebnis, Excel anzeigen und Zeile markieren
     xl.Visible = True 
     xl.WindowState = 2
     xlfile.Worksheets(ergebnis[0]).Activate() #gesuchtes Sheet aktivieren
@@ -143,33 +148,42 @@ if len(ergebnis) == 2:
     xl.Rows(str(ergebnis[1])).Select() #gesuchte Zeile markieren
     xl.WindowState = 3 #maximiert das Fenster
     #zelle="H"+str(i)    
-    #xl.Range(zelle).Select()    
+    #xl.Range(zelle).Select()
+    logging.debug("Nur ein Ergebnis, Excel anzeigen und Zeile markieren ")    
 
 
-if len(ergebnis) >2:
+if len(ergebnis) >2: #mehr als ein Ergebnis, neues Excel Workbook oeffnen und Zeilen kopieren
     
+    logging.debug("mehr als ein Ergebnis, neues Excel Workbook oeffnen und Zeilen kopieren ")    
 
     wb = xl.Workbooks.Add()
     ws = wb.Worksheets.Add()
     ws.Name = "Ergebnisse"
     #wb.Worksheet(1).Rows(1).Value = xlfile.Worksheet(1).Rows(1)
+    
     for i in range(1,len(ergebnis),2):
-        xlfile.Worksheets(i).Rows(i+1).Copy()
+        logging.debug("Zaehler "+str(i))
+        logging.debug("Sheet: "+str(ergebnis[i-1]))#listen zaehlen ab 0
+        logging.debug("Zeile: "+str(ergebnis[i]))    
+
+        xlfile.Worksheets(ergebnis[i-1]).Rows(ergebnis[i]).Copy()
+        #xlfile.Worksheets(i).Rows(i).Copy()
+        
         ws.Paste(ws.Rows(i))
-        print wb.Worksheets(1).Rows(i)
+        logging.debug(wb.Worksheets(1).Rows(i))
 
     #xl2.WindowState = 1
+    xlfile.Close(True)
     xl.Visible = True
     
 
-time.sleep(10)
+#time.sleep(10)
 #return ergebnis    
 
 
 #xlfile.Close(False) 
 #xl.Application.Quit()    
 
-print ergebnis
 
 print "Programm Ende"    
 
