@@ -103,7 +103,7 @@ def suchen(mnummer):
 def initxl():
     global xl, xlfile, erl, sh, app, myWindow
     xl = win32com.client.DispatchEx('Excel.Application')
-    xlfile = xl.Workbooks.Open('e:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True) 
+    xlfile = xl.Workbooks.Open('d:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True) 
     erl= xlfile.Worksheets("Erledigt")
     xlfile.Worksheets("Erledigt").Activate()
     sh = xlfile.ActiveSheet
