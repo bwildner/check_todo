@@ -8,6 +8,32 @@ import win32com.client
 import logging
 from PyQt4 import uic 
 from PyQt4.QtGui import QMainWindow, QMessageBox, QApplication
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('check_todo.ini')
+
+url = parser.get('config', 'url')
+loglevel = parser.get('config', 'loglevel')
+
+
+
+
+
+if loglevel == "INFO":
+    logging.basicConfig(filename="check_todo.log",level = logging.INFO,format = "%(asctime)s [%(levelname)-8s] %(message)s")
+elif loglevel == "DEBUG":
+    logging.basicConfig(filename="check_todo.log",level = logging.DEBUG,format = "%(asctime)s [%(levelname)-8s] %(message)s")
+else:
+    app = QApplication(sys.argv)
+    w = QMessageBox()
+    w.setIcon(QMessageBox.Warning)
+    w.setText("falscher Loglevel")
+    w.setWindowTitle("Fehler ini File")
+    w.show()
+    sys.exit(app.exec_())
+
+logging.info("****************Start Logging****************")
 
 
 form_class = uic.loadUiType("check_todo_gui.ui")[0]                 # Load the UI
@@ -20,6 +46,7 @@ class MyWindowClass(QMainWindow, form_class):
         self.setupUi(self)
         self.button_eingabe.clicked.connect(self.eingabe_clicked) #Button oder Enter schliesst die Eingabe ab
         self.mnummer_textfeld.returnPressed.connect(self.eingabe_clicked)  # Bind the event handlers
+        
                
         
     def eingabe_clicked(self):                  #  button event handler
@@ -61,8 +88,6 @@ def suchespalte(register):
             
 
 def suchen(mnummer):
-    global ergebnis
-    ergebnis = []
     print "Suchen Start"
     logging.info("Suche Start")
  
@@ -101,12 +126,14 @@ def suchen(mnummer):
     
 
 def initxl():
-    global xl, xlfile, erl, sh, app, myWindow
+    global xl, xlfile, app, myWindow
+    global ergebnis
+    ergebnis = []
+    
     xl = win32com.client.DispatchEx('Excel.Application')
-    xlfile = xl.Workbooks.Open('d:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True) 
-    erl= xlfile.Worksheets("Erledigt")
-    xlfile.Worksheets("Erledigt").Activate()
-    sh = xlfile.ActiveSheet
+    xlfile = xl.Workbooks.Open(url, ReadOnly=False, IgnoreReadOnlyRecommended=True) 
+    
+    #xlfile = xl.Workbooks.Open('d:/todo.xls', ReadOnly=False, IgnoreReadOnlyRecommended=True) 
     app = QApplication(sys.argv)
     myWindow = MyWindowClass(None)
 
@@ -124,8 +151,6 @@ def zwischenablage():
 ##### Hauptprogramm #####
 
 print "Prg Start"
-logging.basicConfig(filename="check_todo.log",level = logging.INFO,format = "%(asctime)s [%(levelname)-8s] %(message)s")
-logging.info("****************Start Logging****************")
 
 
 
@@ -135,6 +160,7 @@ zwischenablage() #Zwischenablage pruefen
 
 
 myWindow.show()
+logging.info("show gui")
 
 
 app.exec_() #start GUI Schleife
@@ -176,15 +202,6 @@ if len(ergebnis) >2: #mehr als ein Ergebnis, neues Excel Workbook oeffnen und Ze
     xlfile.Close(True)
     xl.Visible = True
     
-
-#time.sleep(10)
-#return ergebnis    
-
-
-#xlfile.Close(False) 
-#xl.Application.Quit()    
-
-
 print "Programm Ende"    
 
 
