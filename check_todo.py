@@ -10,10 +10,11 @@ from PyQt4 import uic
 from PyQt4.QtGui import QMainWindow, QMessageBox, QApplication
 from ConfigParser import SafeConfigParser
 
+
 parser = SafeConfigParser()
 parser.read('check_todo.ini')
 
-url = parser.get('config', 'url')
+url = parser.get('config', 'url') # hole Wert aus Abschnitt config Feld url
 loglevel = parser.get('config', 'loglevel')
 
 
