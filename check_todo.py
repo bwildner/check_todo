@@ -168,11 +168,13 @@ app.exec_() #start GUI Schleife
 
 if len(ergebnis) == 2: #nur ein Ergebnis, Excel anzeigen und Zeile markieren
     xl.Visible = True 
-    xl.WindowState = 2
     xlfile.Worksheets(ergebnis[0]).Activate() #gesuchtes Sheet aktivieren
+    logging.debug("folgendes Sheet wurde aktiviert: "+str(ergebnis[0])) 
 
     #xl.Range("1").Select()    
     xl.Rows(str(ergebnis[1])).Select() #gesuchte Zeile markieren
+    logging.debug("folgende Zeile wurde markiert: "+str(ergebnis[1])) 
+
     xl.WindowState = 3 #maximiert das Fenster
     #zelle="H"+str(i)    
     #xl.Range(zelle).Select()
