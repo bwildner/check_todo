@@ -102,7 +102,7 @@ def suchen(mnummer):
         logging.debug ("Anzahl Zeilen: "+ str(xlfile.Worksheets(f).UsedRange.Rows.Count))
  
         
-        for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count): #von 1 bis Ende Zeilen durchsuchen
+        for i in range(1,xlfile.Worksheets(f).UsedRange.Rows.Count+1): #von 1 bis Ende Zeilen durchsuchen
             zelleunicode = unicode(suchsheet.Cells(i,suchspalte))
             zelleunicodeentf= zelleunicode.encode('utf8', 'replace')
             #print suchsheet.Cells(i,6)
